@@ -301,6 +301,7 @@ class Connect5Game {
     showWinner() {
         this.winnerMessageElement.textContent = `Player ${this.currentPlayer} (${this.playerNames[this.currentPlayer - 1]}) wins!`;
         this.winnerMessageElement.className = `winner-message player-${this.currentPlayer}`;
+        this.startConfetti();
     }
     
     showDraw() {
@@ -314,6 +315,72 @@ class Connect5Game {
         this.createBoard();
         this.render();
         this.winnerMessageElement.className = 'winner-message hidden';
+        this.stopConfetti();
+    }
+    
+    startConfetti() {
+        const canvas = document.getElementById('confetti-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const particles = [];
+        const particleCount = 150;
+        const colors = ['#e74c3c', '#3498db', '#2ecc71', '#f39c12', '#9b59b6', '#1abc9c'];
+        
+        for (let i = 0; i < particleCount; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height - canvas.height,
+                vx: Math.random() * 6 - 3,
+                vy: Math.random() * 3 + 2,
+                radius: Math.random() * 3 + 1,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                rotation: Math.random() * 360,
+                rotationSpeed: Math.random() * 10 - 5
+            });
+        }
+        
+        const animate = () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            particles.forEach((particle, index) => {
+                particle.x += particle.vx;
+                particle.y += particle.vy;
+                particle.vy += 0.1;
+                particle.rotation += particle.rotationSpeed;
+                
+                ctx.save();
+                ctx.translate(particle.x, particle.y);
+                ctx.rotate(particle.rotation * Math.PI / 180);
+                ctx.fillStyle = particle.color;
+                ctx.fillRect(-particle.radius, -particle.radius, particle.radius * 2, particle.radius * 2);
+                ctx.restore();
+                
+                if (particle.y > canvas.height) {
+                    particles.splice(index, 1);
+                }
+            });
+            
+            if (particles.length > 0 && !this.confettiStopped) {
+                this.confettiAnimation = requestAnimationFrame(animate);
+            } else {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+        };
+        
+        this.confettiStopped = false;
+        animate();
+    }
+    
+    stopConfetti() {
+        this.confettiStopped = true;
+        if (this.confettiAnimation) {
+            cancelAnimationFrame(this.confettiAnimation);
+        }
+        const canvas = document.getElementById('confetti-canvas');
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
 }
 

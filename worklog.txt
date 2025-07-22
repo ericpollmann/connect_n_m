@@ -6,3 +6,4 @@
 > The minimum piece size should be much smaller than it is now (so it will autosize to fit the whole board on a reasonable / small screen even)
 > the open space dimensions should be the minimum of width/height so that a wide/short or tall/narrow board spaces don't overlap due to them being large in one dimension (large spaces) and small in the other (close together).  They should always have a consistent gap in both x and y dimensions and no large gaps between spaces.  Also for the "current player" - there should be one colored square per player there and an indicator over /inside whichever players move it is.  The settings should be sticky via a cookie to go back to whatever you set them to last.
 > even changing players doesn't reset the board, it might cause edge cases but so be it
+> make it more obvious when a player wins, the announcement is below the board and often hidden off screen. instead make it near the top and make a confetti.
